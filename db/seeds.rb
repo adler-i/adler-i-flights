@@ -51,6 +51,10 @@ airports_arry = [
 ]
 
 Airport.destroy_all
+Airline.destroy_all
+Flight.destroy_all
+
+require "faker"
 
 airports_arry.each do |airport|
   Airport.create(
@@ -61,3 +65,47 @@ airports_arry.each do |airport|
   )
 end
 
+['Qatar', 'PIA', 'Swiss', 'German'].each do |airline|
+  Airline.create(name: airline)
+end
+
+
+def create_flights_from_airports
+  Airport.all.each do |airport|
+    arriving_airport_holder = []
+    arriving_airport_holder << airport
+
+    5.times do
+      arriving_airport = get_arriving_airport(arriving_airport_holder)
+      arriving_airport_holder << arriving_airport
+      create_flights(airport, arriving_airport)
+    end
+  end
+end
+
+def get_arriving_airport(holder)
+  airport = Airport.order('RANDOM()').first
+  loop do
+    airport = Airport.order('RANDOM()').first
+    break unless holder.include?(airport)
+  end
+  airport
+end
+
+def create_flights(airport, arriving_airport)
+  3.times do
+    date = Faker::Date.forward(25)
+
+    Flight.create(
+        airline_id: Airline.order('RANDOM()').first.id,
+        from_airport_id: airport.id,
+        to_airport_id: arriving_airport.id,
+        date: date,
+        seats: 150,
+        price: 200
+    )
+  end
+end
+
+
+create_flights_from_airports
