@@ -1,0 +1,51 @@
+<%= render 'shared/header' %>
+
+<section id="booking">
+  <h2 class="ui horizontal divider header">
+    <i class="tag icon"></i>
+    Adler-i
+  </h2>
+  <div class="ui centered grid">
+    <div class="ui steps">
+      <div class="active step" id="search-flight">
+        <i class="search icon"></i>
+        <div class="content">
+          <div class="title">Search Flights</div>
+          <div class="description">Search For Available Flights</div>
+        </div>
+      </div>
+
+      <div class="step" id="select-flight">
+        <i class="checkmark icon"></i>
+        <div class="content">
+          <div class="title">Select Flight</div>
+          <div class="description">Pick a Specific Flight</div>
+        </div>
+      </div>
+
+
+      <div class="step" id="book-flight">
+        <i class="calendar icon"></i>
+        <div class="content">
+          <div class="title">Booking</div>
+          <div class="description">Make a Reservation</div>
+        </div>
+      </div>
+
+      <div class="step" id="confirm-flight">
+        <i class="pin icon"></i>
+        <div class="content">
+          <div class="title">Confirmation</div>
+          <div class="description">Confirm Reservation</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="ui centered grid progress-container">
+    <div class="ui raised segment" id="progress-container">
+      <%= render partial: "forms/search_flight" %>
+    </div>
+  </div>
+</section>
+<%#= render 'footer' %>

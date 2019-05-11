@@ -1,0 +1,32 @@
+<%= form_tag search_flights_path,  method: "post", class: "ui form", remote: true do %>
+  <h4 class="ui dividing header">Search Flights</h4>
+  <div class="three fields">
+    <div class="field">
+      <%= label_tag :departs, "Departs" %>
+      <%= select_tag :departs, options_for_select(@airport_names), class: "ui search fluid dropdown" %>
+    </div>
+
+    <div class="field">
+      <%= label_tag :arrives, "Arrives" %>
+      <%= select_tag :arrives, options_for_select(@airport_names), class: "ui search fluid dropdown" %>
+    </div>
+
+    <div class="field">
+      <%= label_tag :date, "Date" %>
+      <%= date_field_tag "date", "" %>
+    </div>
+  </div>
+
+
+  
+  <div class="three fields">
+    <div class="field">
+      <%= label_tag :adults, "Total seats" %>
+      <%= select_tag :adults, options_for_select(1..9), class: "ui fluid dropdown" %>
+    </div>
+  </div>
+  <%= submit_tag "Search", class: "ui basic blue button", onclick: "validateFields(event)" do %>
+    <i class="search icon"></i>
+  <% end %>
+
+<% end %>
