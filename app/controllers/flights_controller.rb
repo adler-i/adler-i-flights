@@ -6,21 +6,13 @@ class FlightsController < ApplicationController
       params[:departs],
       params[:arrives],
       search_date,
-      total_passengers
+      params[:adults]
     )
 
     render format: :js
   end
 
   private
-
-    def total_passengers
-      data = {
-        total_adults: params[:adults]
-      }
-      data.values.map(&:to_i).inject(0) { |sum, x| sum + x }
-    end
-
     def search_date
       Time.zone.parse(params[:date])
     end

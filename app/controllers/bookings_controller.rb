@@ -6,6 +6,7 @@ class BookingsController < ApplicationController
   def confirm
     session[:booking_params] = booking_params
     @booking_params = booking_params
+    @flight = Flight.find(session[:flight_id])
 
     render format: :js
   end
@@ -17,21 +18,15 @@ class BookingsController < ApplicationController
   end
 
   def payment
-    payment_service = instantiate_payment_service
-    response = payment_service.make_payment
-    session[:token] = response.token
+    flight = session[:flight_id]
 
-    redirect_to response.redirect_uri
+    @booking = Booking.create(
+        flight_id: flight,
+        user_id: User.find(session[:user_id]).id,
+        ticket_number: (0...8).map { (65 + rand(26)).chr }.join
+    )
   end
 
-  def validate_payment
-    if params[:token] == session[:token]
-      selected_flight = Flight.find(session[:flight_id])
-      create_booking(selected_flight, params[:token])
-    else
-      flash[:notice] = invalid_payment
-    end
-  end
 
   def retrieve
     render format: :js
@@ -42,12 +37,10 @@ class BookingsController < ApplicationController
 
   def update
     @booking.update_passengers(booking_params)
-    UserMailer.update_reservation(@booking.id).deliver_now if @booking.user
     redirect_to search_booking_path, notice: booking_success
   end
 
   def destroy
-    UserMailer.delete_reservation(@booking.id).deliver_now if @booking.user
     @booking.destroy
 
     render json: { success: true }
@@ -59,23 +52,10 @@ class BookingsController < ApplicationController
     @booking = Booking.find_by(reference_number: params[:reference_number])
   end
 
-  def instantiate_payment_service
-    selected_flight = Flight.find(session[:flight_id])
-
-    PaymentService.new(
-      selected_flight: selected_flight,
-      validate_url: validate_payment_url(selected_flight),
-      contact_url: contact_url,
-      total_cost: session[:total_cost]
-    )
-  end
-
   def booking_params
-    passenger_fields = %w(first_name last_name email)
+    passenger_fields = %w(name)
     params.permit(
-      adult: passenger_fields,
-      child: passenger_fields,
-      infant: passenger_fields
+      adult: passenger_fields
     )
   end
 end

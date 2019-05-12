@@ -6,8 +6,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       session[:user_id] = @user.id
-      UserMailer.welcome(@user.id).deliver_now
-      redirect_to root_path, notice: account_created
+      redirect_to root_path, notice: "Account Created!"
     else
       flash[:errors] = @user.errors.full_messages
       render :new
@@ -22,13 +21,9 @@ class UsersController < ApplicationController
 
   def user_params
     params.permit(
-      :first_name,
-      :last_name,
+      :name,
       :email,
-      :phone,
       :password,
-      :password_confirmation,
-      :gender
-    )
+      :password_confirmation)
   end
 end
