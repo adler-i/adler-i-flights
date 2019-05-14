@@ -4,8 +4,9 @@ class BookingsController < ApplicationController
     if session[:user_id].nil? or (session[:user_id].present? or User.find(session[:user_id]).nil?)
       user = User.create_user_from_booking booking_params
       if user
-        session[:user_id] = user.id
+        @@userid = user.id
       end
+      session[:user_id] = @@userid
     end
     session[:booking_params] = booking_params
     @booking_params = booking_params
@@ -25,7 +26,7 @@ class BookingsController < ApplicationController
 
     @booking = Booking.create(
         flight_id: flight,
-        user_id: User.find(session[:user_id]).id,
+        user_id: @@userid,
         ticket_number: (0...8).map { (65 + rand(26)).chr }.join
     )
     redirect_to past_bookings_path
