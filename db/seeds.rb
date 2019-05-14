@@ -1,3 +1,4 @@
+require 'bcrypt'
 airports_arry = [
     [2,"Madang Airport","Madang","Papua New Guinea","MAG","AYMD",-5.20707988739,145.789001465,20,10,"U","Pacific/Port_Moresby","airport","OurAirports"  ],
     [3,"Mount Hagen Kagamuga Airport","Mount Hagen","Papua New Guinea","HGU","AYMH",-5.826789855957031,144.29600524902344,5388,10,"U","Pacific/Port_Moresby","airport","OurAirports"  ],
@@ -50,10 +51,6 @@ airports_arry = [
     [50,"Arviat Airport","Eskimo Point","Canada","YEK","CYEK",61.0942001343,-94.07080078119999,32,-6,"A","America/Winnipeg","airport","OurAirports"  ]
 ]
 
-Airport.destroy_all
-Airline.destroy_all
-Flight.destroy_all
-
 require "faker"
 
 airports_arry.each do |airport|
@@ -66,7 +63,7 @@ airports_arry.each do |airport|
 end
 
 ['Qatar', 'PIA', 'Swiss', 'German'].each do |airline|
-  Airline.create(name: airline)
+  Airline.create(name: airline, email: "#{airline}@adler-i.com", password_digest:  BCrypt::Password.create("1234"))
 end
 
 
@@ -84,12 +81,7 @@ def create_flights_from_airports
 end
 
 def get_arriving_airport(holder)
-  airport = Airport.order('RANDOM()').first
-  loop do
-    airport = Airport.order('RANDOM()').first
-    break unless holder.include?(airport)
-  end
-  airport
+  Airport.order('RANDOM()').first
 end
 
 def create_flights(airport, arriving_airport)

@@ -1,6 +1,12 @@
 class BookingsController < ApplicationController
 
   def confirm
+    if session[:user_id].nil? or (session[:user_id].present? or User.find(session[:user_id]).nil?)
+      user = User.create_user_from_booking booking_params
+      if user
+        session[:user_id] = user.id
+      end
+    end
     session[:booking_params] = booking_params
     @booking_params = booking_params
     @flight = Flight.find(session[:flight_id])
@@ -27,7 +33,7 @@ class BookingsController < ApplicationController
 
   private
   def booking_params
-    passenger_fields = %w(name)
+    passenger_fields = %w(name email)
     params.permit(
       adult: passenger_fields
     )
