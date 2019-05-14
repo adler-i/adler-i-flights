@@ -1,14 +1,5 @@
 RailsAdmin.config do |config|
 
-  config.included_models = ["Airline", "Flight"]
-
-  config.model 'Airline' do
-    list do
-      field :name
-      field :email
-    end
-  end
-
   ### Popular gems integration
 
   ## == Devise ==
